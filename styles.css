@@ -1,0 +1,563 @@
+/* =========================================================
+   PERFUME LETTER + OLD PAPER + ROSE ANIMATION + SOFT HEARTS
+   + HIDE ENVELOPE AFTER OPEN (FINAL)
+   ========================================================= */
+
+/* --------- Theme --------- */
+:root{
+  --bgA:#07070d;
+  --bgB:#140a16;
+
+  --accent:#ff4d86;
+  --accent2:#7c3aed;
+
+  --paper:#fff3e8;
+  --paper2:#ffe8d6;
+
+  --ink:#2b1a22;
+  --muted:#6a515b;
+
+  --glass: rgba(255,255,255,.08);
+  --stroke: rgba(255,255,255,.14);
+
+  --shadow: 0 28px 90px rgba(0,0,0,.55);
+  --softShadow: 0 14px 45px rgba(0,0,0,.35);
+}
+
+/* --------- Reset --------- */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+  color:#fff;
+  background:
+    radial-gradient(1200px 650px at 15% 15%, rgba(255,77,134,.22), transparent 60%),
+    radial-gradient(1100px 650px at 85% 15%, rgba(124,58,237,.20), transparent 60%),
+    radial-gradient(900px 700px at 50% 95%, rgba(255,255,255,.06), transparent 55%),
+    linear-gradient(160deg, var(--bgA), var(--bgB));
+  overflow-x:hidden;
+  overflow-y:auto;
+}
+
+/* --------- Hearts (soft) --------- */
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+}
+.heart{
+  position:absolute;
+  bottom:-40px;
+  opacity:0;
+  filter: blur(.1px) drop-shadow(0 12px 30px rgba(0,0,0,.28));
+  animation-name: softRise;
+  animation-timing-function: cubic-bezier(.18,.82,.22,1);
+  will-change: transform, opacity;
+}
+@keyframes softRise{
+  0%{ transform: translate(0,0) scale(.92); opacity:0; }
+  12%{ opacity:.55; }
+  35%{ opacity:.92; }
+  100%{ transform: translate(var(--drift, 0px), -120vh) scale(1.12); opacity:0; }
+}
+
+/* --------- Topbar --------- */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:8;
+  padding:14px 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  backdrop-filter: blur(14px);
+  background: rgba(8,8,14,.55);
+  border-bottom:1px solid rgba(255,255,255,.10);
+}
+.brand{ font-weight:900; letter-spacing:.2px; }
+
+/* --------- Layout wrapper --------- */
+.wrap{
+  position:relative;
+  z-index:3;
+  min-height: calc(100vh - 64px);
+  display:grid;
+  place-items:center;
+  padding:32px 16px 32px;
+}
+.stage{
+  width:min(560px, 94vw);
+}
+
+/* --------- Envelope (perfume style) --------- */
+.envelope{
+  position:relative;
+  width:100%;
+  aspect-ratio: 4 / 3;
+  max-height: 440px;
+  border-radius:28px;
+  cursor:pointer;
+  user-select:none;
+  transform: translateZ(0);
+  overflow:hidden; /* يمنع أي خروج */
+}
+
+/* ظل ناعم */
+.env-shadow{
+  position:absolute;
+  inset: 22px 18px 10px 18px;
+  border-radius:28px;
+  background: rgba(0,0,0,.34);
+  filter: blur(18px);
+  z-index:0;
+}
+
+/* خلفية زجاجية + ضباب عطر */
+.env-back{
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  background:
+    radial-gradient(220px 160px at 20% 25%, rgba(255,77,134,.35), transparent 70%),
+    radial-gradient(260px 180px at 80% 20%, rgba(124,58,237,.28), transparent 70%),
+    radial-gradient(420px 220px at 50% 88%, rgba(255,255,255,.12), transparent 70%),
+    linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.04));
+  border:1px solid rgba(255,255,255,.14);
+  z-index:1;
+}
+
+/* جيب الظرف */
+.env-front{
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  background: linear-gradient(135deg, rgba(255,77,134,.95), rgba(255,45,114,.95));
+  z-index:5;
+  clip-path: polygon(0 38%, 50% 72%, 100% 38%, 100% 100%, 0 100%);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+/* غطاء الظرف */
+.env-flap{
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  background: linear-gradient(135deg, rgba(255,164,196,.95), rgba(255,61,119,.95));
+  z-index:6;
+  clip-path: polygon(0 0, 100% 0, 50% 62%);
+  transform-origin: top;
+  transform: rotateX(0deg);
+  transition: transform .85s cubic-bezier(.2,.8,.2,1);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+/* --------- Rose (animated) --------- */
+.env-back::before,
+.env-back::after{
+  content:"";
+  position:absolute;
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  filter: blur(.2px);
+  opacity:.85;
+  z-index:2;
+  pointer-events:none;
+  animation: roseFloat 6.5s ease-in-out infinite;
+}
+.env-back::before{
+  left:-38px;
+  bottom:-36px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,255,255,.22), transparent 45%),
+    radial-gradient(circle at 55% 55%, rgba(255,77,134,.55), transparent 58%),
+    radial-gradient(circle at 45% 45%, rgba(255,61,119,.75), transparent 62%),
+    radial-gradient(circle at 60% 40%, rgba(124,58,237,.35), transparent 58%);
+  transform: rotate(8deg);
+}
+.env-back::after{
+  right:-42px;
+  top:-40px;
+  width: 130px;
+  height: 130px;
+  background:
+    radial-gradient(circle at 40% 40%, rgba(255,255,255,.18), transparent 45%),
+    radial-gradient(circle at 55% 55%, rgba(255,170,210,.55), transparent 58%),
+    radial-gradient(circle at 45% 45%, rgba(255,61,119,.70), transparent 62%),
+    radial-gradient(circle at 62% 42%, rgba(124,58,237,.30), transparent 58%);
+  animation-duration: 7.5s;
+  transform: rotate(-10deg);
+}
+@keyframes roseFloat{
+  0%,100%{ transform: translateY(0) rotate(6deg) scale(1); opacity:.82; }
+  50%{ transform: translateY(-10px) rotate(-6deg) scale(1.03); opacity:.92; }
+}
+
+/* --------- Letter (old paper) --------- */
+.letter{
+  position:absolute;
+  left:50%;
+  top: 16%;
+  transform: translateX(-50%) translateY(58%);
+  width: 88%;
+  height: 80%;
+  padding:16px 14px;
+  border-radius:22px;
+  z-index:4;
+  overflow:auto;
+  transition:
+    transform .85s cubic-bezier(.2,.8,.2,1),
+    opacity .6s ease,
+    box-shadow .6s ease;
+  background:
+    radial-gradient(120px 90px at 15% 20%, rgba(255,255,255,.55), transparent 65%),
+    radial-gradient(140px 110px at 85% 25%, rgba(255,255,255,.42), transparent 70%),
+    radial-gradient(260px 160px at 40% 90%, rgba(255,220,200,.75), transparent 70%),
+    linear-gradient(180deg, var(--paper), var(--paper2));
+  border:1px solid rgba(0,0,0,.10);
+  box-shadow: var(--softShadow);
+  color: var(--ink);
+}
+.letter::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:22px;
+  pointer-events:none;
+  background:
+    radial-gradient(280px 120px at 10% 0%, rgba(0,0,0,.06), transparent 60%),
+    radial-gradient(300px 140px at 100% 30%, rgba(0,0,0,.05), transparent 60%),
+    radial-gradient(260px 140px at 20% 100%, rgba(0,0,0,.05), transparent 60%);
+  mix-blend-mode: multiply;
+}
+
+/* Scrollbar */
+.letter::-webkit-scrollbar{ width:10px; }
+.letter::-webkit-scrollbar-thumb{ background: rgba(0,0,0,.18); border-radius:999px; }
+.letter::-webkit-scrollbar-track{ background: transparent; }
+
+/* محتوى */
+.letter-top{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.stamp{
+  width:46px; height:46px;
+  display:grid; place-items:center;
+  border-radius:14px;
+  background: rgba(255,77,134,.16);
+  border:1px dashed rgba(255,77,134,.35);
+  font-size:22px;
+}
+.h1{ margin:0; font-size:26px; font-weight:950; letter-spacing:.2px; }
+.sub{ margin:0; color: rgba(43,26,34,.70); font-weight:800; }
+.divider{ height:1px; background: rgba(0,0,0,.12); margin:12px 0 10px; }
+.msg{ margin:0; line-height:1.95; font-weight:800; color: rgba(43,26,34,.92); }
+
+/* Countdown */
+.countdown{
+  margin-top:12px;
+  padding:12px;
+  border-radius:18px;
+  background: rgba(255,77,134,.10);
+  border:1px solid rgba(255,77,134,.18);
+}
+.small{ margin:0 0 10px; color: rgba(43,26,34,.70); font-weight:900; }
+.timer{ display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; }
+.tbox{
+  text-align:center;
+  padding:10px 6px;
+  border-radius:16px;
+  background: rgba(255,255,255,.78);
+  border:1px solid rgba(0,0,0,.06);
+  box-shadow: 0 8px 18px rgba(0,0,0,.08);
+}
+.tbox span{ display:block; font-size:18px; font-weight:950; color: rgba(43,26,34,.95); }
+.tbox small{ color: rgba(43,26,34,.65); font-weight:900; }
+
+/* Signature */
+.sign{
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  color: rgba(43,26,34,.70);
+  font-weight:950;
+}
+.nameInput{
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.12);
+  background: rgba(255,255,255,.86);
+  color: rgba(43,26,34,.95);
+  min-width: 220px;
+}
+
+/* Buttons */
+.btn{
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.10);
+  color:#fff;
+  padding:12px 16px;
+  border-radius:16px;
+  cursor:pointer;
+  font-weight:950;
+  transition: transform .08s ease, filter .2s ease, background .2s ease;
+}
+.btn:active{ transform: translateY(1px); }
+.btn.primary{
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-color: rgba(255,255,255,.20);
+}
+.btn.ghost{ background: transparent; }
+.btn.mini{ padding:10px 12px; border-radius:14px; }
+.full{ width:100%; }
+
+/* Hint */
+.tap-hint{
+  position:absolute;
+  left:50%;
+  bottom:-44px;
+  transform: translateX(-50%);
+  width:max-content;
+  max-width:92vw;
+  padding:10px 12px;
+  border-radius:999px;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.14);
+  color: rgba(255,255,255,.90);
+  font-weight:950;
+  backdrop-filter: blur(10px);
+  z-index:9;
+}
+
+/* ========= OPEN STATE ========= */
+/* 1) فتح الغطاء */
+.envelope.open .env-flap{
+  transform: rotateX(180deg);
+}
+
+/* 2) اخفاء الظرف بالكامل (front/back/flap/shadow/hint) */
+.envelope.open .env-front,
+.envelope.open .env-back,
+.envelope.open .env-flap,
+.envelope.open .env-shadow,
+.envelope.open .tap-hint{
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .6s ease;
+}
+
+/* 3) تحويل الورقة إلى كرت مستقل */
+.envelope.open .letter{
+  transform: translateX(-50%) translateY(-10%);
+  box-shadow: var(--shadow);
+}
+
+/* 4) جعل الظرف نفسه شفاف حتى ما يبين شكل خلفه */
+.envelope.open{
+  background: transparent;
+}
+
+/* Confetti canvas */
+.confetti{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:10;
+}
+
+/* Mobile tweaks */
+@media (max-width: 420px){
+  .envelope{ max-height: 330px; }
+  .letter{ height: 82%; }
+  .h1{ font-size:24px; }
+}
+
+/* =========================
+   FLOW SECTIONS (ADD ON)
+   ========================= */
+
+/* المربع الأول داخل الظرف */
+.cardBox{
+  position:absolute;
+  left:50%;
+  top: 16%;
+  transform: translateX(-50%) translateY(58%);
+  width: 88%;
+  height: 80%;
+  padding:16px 14px;
+  border-radius:22px;
+  z-index:4;
+  overflow:auto;
+  transition: transform .85s cubic-bezier(.2,.8,.2,1), box-shadow .6s ease;
+  background:
+    radial-gradient(120px 90px at 15% 20%, rgba(255,255,255,.55), transparent 65%),
+    radial-gradient(140px 110px at 85% 25%, rgba(255,255,255,.42), transparent 70%),
+    radial-gradient(260px 160px at 40% 90%, rgba(255,220,200,.75), transparent 70%),
+    linear-gradient(180deg, var(--paper), var(--paper2));
+  border:1px solid rgba(0,0,0,.10);
+  box-shadow: var(--softShadow);
+  color: var(--ink);
+}
+.cardTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.seal{
+  width:46px; height:46px;
+  display:grid; place-items:center;
+  border-radius:14px;
+  background: rgba(255,77,134,.16);
+  border:1px dashed rgba(255,77,134,.35);
+  font-size:22px;
+}
+.cardTitle{
+  margin:0;
+  font-size:26px;
+  font-weight:950;
+  letter-spacing:.2px;
+}
+.fromLine{
+  margin:12px 0 0;
+  color: rgba(43,26,34,.70);
+  font-weight:950;
+}
+
+/* عند فتح الظرف نخفي عناصره ونبرز cardBox */
+.envelope.open .cardBox{
+  transform: translateX(-50%) translateY(-10%);
+  box-shadow: var(--shadow);
+}
+.envelope.open .env-front,
+.envelope.open .env-back,
+.envelope.open .env-flap,
+.envelope.open .env-shadow,
+.envelope.open .tap-hint{
+  opacity:0;
+  pointer-events:none;
+  transition: opacity .6s ease;
+}
+.envelope.open{
+  background: transparent;
+}
+
+/* اخفاء/اظهار الأقسام */
+.ancientLetter,
+.memories{
+  display:none;
+}
+.stage.showGreeting .ancientLetter{
+  display:block;
+}
+.stage.showMemories .memories{
+  display:block;
+}
+.stage.showGreeting .envelope,
+.stage.showMemories .envelope{
+  display:none;
+}
+
+/* ورقة أثرية للمعايدة */
+.ancientLetter{
+  width:min(640px, 94vw);
+  margin: 0 auto;
+  border-radius:24px;
+  padding:18px 16px;
+  color: var(--ink);
+  background:
+    radial-gradient(140px 90px at 12% 18%, rgba(255,255,255,.55), transparent 65%),
+    radial-gradient(160px 110px at 88% 22%, rgba(255,255,255,.42), transparent 70%),
+    radial-gradient(260px 160px at 42% 92%, rgba(255,220,200,.70), transparent 70%),
+    linear-gradient(180deg, var(--paper), var(--paper2));
+  border:1px solid rgba(0,0,0,.10);
+  box-shadow: var(--shadow);
+}
+.ancHeader{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.wax{
+  width:46px; height:46px;
+  display:grid; place-items:center;
+  border-radius:14px;
+  background: rgba(255,77,134,.16);
+  border:1px dashed rgba(255,77,134,.35);
+  font-size:22px;
+}
+.ancTitle{
+  margin:0;
+  font-size:24px;
+  font-weight:950;
+}
+.ancDivider{
+  height:1px;
+  background: rgba(0,0,0,.12);
+  margin:12px 0 10px;
+}
+.ancText{
+  margin:0;
+  line-height:2;
+  font-weight:850;
+  color: rgba(43,26,34,.92);
+}
+.ancSig{
+  margin:14px 0 0;
+  text-align:left;
+  color: rgba(43,26,34,.72);
+  font-weight:950;
+}
+.ancActions{
+  margin-top:14px;
+  display:flex;
+  justify-content:center;
+}
+
+/* الذكريات */
+.memories{
+  width:min(720px, 94vw);
+  margin: 0 auto;
+  text-align:center;
+}
+.memTitle{
+  margin:0 0 12px;
+  font-size:24px;
+  font-weight:950;
+}
+.mediaBox{
+  border-radius:22px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  box-shadow: var(--softShadow);
+}
+.mediaBox img{
+  width:100%;
+  display:block;
+}
+.mediaFallback{
+  padding:18px;
+  color: rgba(255,255,255,.85);
+}
+.memActions{
+  margin-top:14px;
+  display:grid;
+  gap:10px;
+}
+
+/* موبايل */
+@media (max-width:420px){
+  .cardTitle{font-size:24px}
+  .ancTitle{font-size:22px}
+}

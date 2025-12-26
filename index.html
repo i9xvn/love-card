@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>زهرائي  ❤️</title>
+  <meta name="theme-color" content="#ff3d77" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <div id="hearts" class="hearts" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">🎁 مفاجأة</div>
+    <button id="musicBtn" class="btn ghost" type="button">تشغيل الموسيقى</button>
+    <audio id="bgm" loop preload="auto">
+      <source src="كل ساعة.mp3" type="audio/mpeg" autoplay/>
+    </audio>
+  </header>
+
+  <main class="wrap">
+    <section class="stage">
+
+      <!-- الظرف -->
+      <div class="envelope" id="envelope" role="button" aria-label="افتح الظرف" tabindex="0">
+        <div class="env-shadow"></div>
+        <div class="env-back"></div>
+
+        <!-- 1) المربع الأول (بعد الضغط على الظرف) -->
+        <div class="cardBox" id="cardBox" aria-live="polite">
+          <div class="cardTop">
+            <div class="seal">🕯️</div>
+            <h1 class="cardTitle" id="herTitle">الى زهرائي  </h1>
+          </div>
+
+          <div class="countdown">
+            <p class="small">العدّ التنازلي:</p>
+            <div class="timer">
+              <div class="tbox"><span id="dd">00</span><small>يوم</small></div>
+              <div class="tbox"><span id="hh">00</span><small>ساعة</small></div>
+              <div class="tbox"><span id="mm">00</span><small>دقيقة</small></div>
+              <div class="tbox"><span id="ss">00</span><small>ثانية</small></div>
+            </div>
+          </div>
+
+          <p class="fromLine">— من <b>سيف</b></p>
+
+          <button id="toGreeting" class="btn primary full" type="button">اذهبي إلى المعايدة ✨</button>
+        </div>
+
+        <div class="env-front"></div>
+        <div class="env-flap" id="flap"></div>
+        <div class="tap-hint" id="tapHint">اضغطي على الظرف حتى ينفتح ✨</div>
+      </div>
+
+      <!-- 2) المعايدة (ورقة أثرية) -->
+      <section class="ancientLetter" id="greeting" aria-hidden="true">
+        <div class="ancHeader">
+          <div class="wax">🏺</div>
+          <h2 class="ancTitle">إلى زهرائي</h2>
+        </div>
+
+        <div class="ancDivider"></div>
+
+        <p class="ancText">
+         حبيبتي وصديقتي وبنيتي كل عام وانتِ بألف الف خير وكل عام وانتِ اسعد انسانة وكل عام واني احبج وكل عام واحنة سوة وكل عام وحبنة يزيد اكثر واكثر قبل سنة من هذا الوقت جنت عايش بضياع لحد ما دخلتي حياتي وغيرتي كلشي بيها وصارت احلى جنتِ نقلة بحياتي وهسة صار هدفي انتِ الله لا يحرمني منج ويحفظج الي كل يوم وكل شهر وكل سنة حبيبت روحي ووبداية السنة ان شاء الله تكون سنة خير علينة واني متفائل بهاي السنة لان راح تبدي وياج معكِ سوف ابدي عامي الجديد وكل عام وانتِ بقلبي والله يديمج الي بكل سنيني احبج في ختام
+          هذا العام واحبج في بداية العام الجديد وحتى نهاية العمر 
+           ♥️🫂</p>
+
+        <p class="ancSig">— سيف</p>
+
+        <div class="ancActions">
+          <button id="toMemories" class="btn primary" type="button">روحي للذكريات 📸</button>
+        </div>
+      </section>
+
+      <!-- 3) صورة/فيديو + احتفال -->
+      <section class="memories" id="memories" aria-hidden="true">
+        <h2 class="memTitle">ذكرياتنا ❤️</h2>
+
+        <!-- خيار 1: صورة -->
+        <!-- <div class="mediaBox">
+          <img id="memoryImg" src="photo.jpg" alt="صورتنا" onerror="this.style.display='none'; document.getElementById('mediaFallback').style.display='block';">
+          <div id="mediaFallback" class="mediaFallback" style="display:none;">
+            ضع صورة باسم <b>photo.jpg</b> داخل نفس المجلد<br/>
+            أو استبدلها بفيديو (اختياري) داخل HTML
+          </div>
+        </div> -->
+
+       
+        <div class="mediaBox">
+          <video controls playsinline src="v.mp4" style="width:100%; border-radius:18px;"></video>
+        </div>
+       
+
+        <div class="memActions">
+          <button id="confettiBtn" class="btn primary full" type="button">احتفال 🎉</button>
+          <button id="backToGreeting" class="btn ghost full" type="button">رجوع للمعايدة ↩️</button>
+        </div>
+      </section>
+
+    </section>
+  </main>
+
+  <canvas id="confetti" class="confetti" aria-hidden="true"></canvas>
+  <script src="script.js"></script>
+</body>
+</html>
